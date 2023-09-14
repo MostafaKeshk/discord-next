@@ -1,12 +1,18 @@
 import AuthButton from "@/modules/auth/AuthButton";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "@/modules/auth/utils/getServerSession";
+import { getData } from "@/modules/home/api";
 
 const Home = async () => {
   const session = await getServerSession();
-  console.log(session);
+
+  if (!session) return null;
+  const data: any = await getData(1, session.token);
+  console.log(data);
   return (
     <div>
-      <p>Protected Route</p>
+      {data.rows.map((item: any) => (
+        <h1 key={item._id}>{item.total}</h1>
+      ))}
       <AuthButton />
     </div>
   );

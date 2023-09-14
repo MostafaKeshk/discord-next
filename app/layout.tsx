@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 
 import SessionProvider from "@/providers/SessionProvider";
 import { Toaster } from "@/shared/components/ui/toaster";
+import { authOptions } from "./(backend)/api/auth/[...nextauth]/route";
 const font = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,12 +18,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
-
   return (
     <html lang="en">
       <body className={font.className}>
-        <SessionProvider session={session}>
+        <SessionProvider>
           {children}
           <Toaster />
         </SessionProvider>

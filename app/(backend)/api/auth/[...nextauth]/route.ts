@@ -45,23 +45,27 @@ export const authOptions: any = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt(token: any) {
+    async jwt({ token, user }: any) {
+      if (user) {
+        token.id = user.user._id;
+        token.token = user.token;
+        token.name = user.user.name;
+        token.email = user.user.email;
+      }
+
       return token;
     },
-    async session(session: any, token: any) {
-      // Add property to session, like an access_token from a provider.
-      // session.user = token.user.user;
-      console.log(token);
-      console.log("<===================>");
-      console.log("<===================>");
-      console.log("<===================>");
-      console.log("<===================>");
-      console.log("<===================>");
-      console.log("<===================>");
+    async session({ session, token }: any) {
+      const body = {
+        ...session,
+        token: token.token,
+        user: {
+          ...session.user,
+          id: token.id,
+        },
+      };
 
-      console.log(session);
-
-      return session;
+      return body;
     },
   },
 };
